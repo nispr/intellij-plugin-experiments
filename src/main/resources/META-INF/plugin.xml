@@ -1,0 +1,37 @@
+<idea-plugin>
+    <id>com.ezkhimo.samplecodegen.SampleCodeGenerator</id>
+    <name>Sample Code Generator</name>
+    <vendor email="niklas@springhorn.dev" url="http://springhorn.dev">ezkhimo</vendor>
+
+    <description><![CDATA[
+    <b>Example for code generation.</b><br />
+    Nothing special.
+    ]]></description>
+    <depends>com.intellij.modules.platform</depends>
+    <depends>org.jetbrains.kotlin</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <postStartupActivity implementation="com.ezkhimo.intellij.zephyr.ZephyrStartupActivity"/>
+        <projectConfigurable
+                parentId="tools"
+                instance="com.ezkhimo.intellij.zephyr.settings.ZephyrProjectConfigurable"
+                id="com.ezkhimo.intellij.zephyr.settings.ZephyrProjectConfigurable"
+                displayName="Zephyr Project Settings"
+                nonDefaultProject="true"/>
+        <applicationService
+                serviceImplementation="com.ezkhimo.intellij.zephyr.settings.ZephyrSettings"/>
+    </extensions>
+
+    <actions>
+        <action id="com.ezkhimo.NewZephyrTestCaseAction"
+                class="com.ezkhimo.intellij.zephyr.action.NewZephyrTestCaseAction" text="Zephyr Test Case"
+                description="Add Zephyr test case">
+            <add-to-group group-id="NewGroup" anchor="after" relative-to-action="NewFile"/>
+        </action>
+        <action id="com.ezkhimo.intellij.zephyr.action.GenerateZephyrTranspilationAction"
+                class="com.ezkhimo.intellij.zephyr.action.GenerateZephyrTranspilationAction" text="Zephyr Test"
+                description="Import zephyr test code">
+            <add-to-group group-id="KotlinGenerateGroup" anchor="after" relative-to-action="KotlinGenerateToString"/>
+        </action>
+    </actions>
+</idea-plugin>
