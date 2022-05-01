@@ -1,14 +1,14 @@
-package com.ezkhimo.intellij.zephyr.action
+package com.nispr.intellij.zephyr.action
 
-import com.ezkhimo.intellij.zephyr.action.ui.EnterStoryIdDialog
+import com.nispr.intellij.zephyr.action.ui.EnterIssueIdDialog
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import org.koin.java.KoinJavaComponent.inject
-import com.ezkhimo.intellij.zephyr.transpile.ZephyrTestCaseTranspiler
+import com.nispr.intellij.zephyr.transpile.ZephyrTestCaseTranspiler
 
 
-class GenerateZephyrTranspilationAction : AnAction() {
+class TranspileZephyrTestCaseAction : AnAction() {
 
     private val transpiler: ZephyrTestCaseTranspiler by inject(ZephyrTestCaseTranspiler::class.java)
 
@@ -16,9 +16,9 @@ class GenerateZephyrTranspilationAction : AnAction() {
         val project = e.project ?: return
         val editor = e.getRequiredData(CommonDataKeys.EDITOR)
         val psiFile = e.getRequiredData(CommonDataKeys.PSI_FILE)
-        val dialog = EnterStoryIdDialog(project)
-        val storyId = dialog.awaitStoryId()
-        storyId?.let {
+        val dialog = EnterIssueIdDialog(project)
+        val issueId = dialog.awaitIssueId()
+        issueId?.let {
             transpiler.transpileIntoEditor(project, editor, psiFile, it)
         }
     }

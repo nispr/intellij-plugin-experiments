@@ -1,31 +1,32 @@
 <idea-plugin>
-    <id>com.ezkhimo.samplecodegen.SampleCodeGenerator</id>
-    <name>Sample Code Generator</name>
-    <vendor email="niklas@springhorn.dev" url="http://springhorn.dev">ezkhimo</vendor>
+    <id>com.nispr.intellij.zephyr.Zephyr</id>
+    <name>Zephyr Test Case Transpiler</name>
+    <vendor email="niklas@springhorn.dev" url="https://springhorn.dev">nispr</vendor>
 
     <description><![CDATA[
-    <b>Example for code generation.</b><br />
-    Nothing special.
+    <b>Zephyr Test Case Transpiler</b><br />
+    Add possibility to fetch and transpile Zephyr test cases to Kotlin Code.
     ]]></description>
+
     <depends>com.intellij.modules.platform</depends>
     <depends>org.jetbrains.kotlin</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <postStartupActivity implementation="com.ezkhimo.intellij.zephyr.ZephyrStartupActivity"/>
+        <postStartupActivity implementation="com.nispr.intellij.zephyr.ZephyrTranspilerStartupActivity"/>
         <projectConfigurable
                 parentId="tools"
-                instance="com.ezkhimo.intellij.zephyr.settings.ZephyrProjectConfigurable"
-                id="com.ezkhimo.intellij.zephyr.settings.ZephyrProjectConfigurable"
-                displayName="Zephyr Project Settings"
+                instance="com.nispr.intellij.zephyr.settings.ZephyrTranspilerProjectConfigurable"
+                id="com.nispr.intellij.zephyr.settings.ZephyrTranspilerProjectConfigurable"
+                displayName="Zephyr Test Case Transpiler Project Settings"
                 nonDefaultProject="true"/>
         <applicationService
-                serviceImplementation="com.ezkhimo.intellij.zephyr.settings.ZephyrSettings"/>
+                serviceImplementation="com.nispr.intellij.zephyr.settings.ZephyrTranspilerSettings"/>
     </extensions>
 
     <actions>
-        <action id="com.ezkhimo.intellij.zephyr.action.GenerateZephyrTranspilationAction"
-                class="com.ezkhimo.intellij.zephyr.action.GenerateZephyrTranspilationAction" text="Zephyr Test"
-                description="Import zephyr test code">
+        <action id="com.nispr.intellij.zephyr.action.TranspileZephyrTestCaseAction"
+                class="com.nispr.intellij.zephyr.action.TranspileZephyrTestCaseAction" text="Zephyr Test Case Transpilation"
+                description="Import Zephyr test code">
             <add-to-group group-id="KotlinGenerateGroup" anchor="after" relative-to-action="KotlinGenerateToString"/>
         </action>
     </actions>

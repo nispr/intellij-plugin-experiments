@@ -1,7 +1,7 @@
-package com.ezkhimo.intellij.zephyr.settings.ui
+package com.nispr.intellij.zephyr.settings.ui
 
-import com.ezkhimo.intellij.zephyr.resources.getString
-import com.ezkhimo.intellij.zephyr.settings.ZephyrSettings
+import com.nispr.intellij.zephyr.resources.getString
+import com.nispr.intellij.zephyr.settings.ZephyrTranspilerSettings
 import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBPasswordField
 import com.intellij.ui.components.JBTextField
@@ -10,7 +10,7 @@ import javax.swing.JComponent
 import javax.swing.JPanel
 
 class ZephyrSettingsComponent {
-    private val settings get() = ZephyrSettings.instance
+    private val settings get() = ZephyrTranspilerSettings.instance
     val panel: JPanel
 
     private val jiraApiBaseUrlInputText = JBTextField(settings.jiraApiBaseUrl)
@@ -61,7 +61,7 @@ class ZephyrSettingsComponent {
             .addTooltip(getString("zephyr.settings.jira.password.description"))
 
             .addLabeledComponent(JBLabel(getString("zephyr.settings.storyprefix.label")), storyPrefixText, 1, false)
-            .addTooltip(getString("zephyr.settings.jira.storyprefix.description"))
+            .addTooltip(getString("zephyr.settings.jira.issueprefix.description"))
 
             .addComponentFillVertically(JPanel(), 0)
             .panel

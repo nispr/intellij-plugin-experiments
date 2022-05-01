@@ -1,7 +1,7 @@
-package com.ezkhimo.intellij.zephyr.settings
+package com.nispr.intellij.zephyr.settings
 
-import com.ezkhimo.intellij.zephyr.resources.getString
-import com.ezkhimo.intellij.zephyr.settings.ui.ZephyrSettingsComponent
+import com.nispr.intellij.zephyr.resources.getString
+import com.nispr.intellij.zephyr.settings.ui.ZephyrSettingsComponent
 import com.intellij.credentialStore.CredentialAttributes
 import com.intellij.credentialStore.Credentials
 import com.intellij.credentialStore.generateServiceName
@@ -9,12 +9,12 @@ import com.intellij.ide.passwordSafe.PasswordSafe
 import com.intellij.openapi.options.Configurable
 
 
-class ZephyrProjectConfigurable : Configurable {
+class ZephyrTranspilerProjectConfigurable : Configurable {
 
     private var settingsComponent: ZephyrSettingsComponent? = null
 
-    private val settings: ZephyrSettings
-        get() = ZephyrSettings.instance
+    private val settings: ZephyrTranspilerSettings
+        get() = ZephyrTranspilerSettings.instance
 
     private val credentialInput
         get() = settingsComponent?.let { Credentials(it.userName, it.getPassword()) }
@@ -38,8 +38,8 @@ class ZephyrProjectConfigurable : Configurable {
 
     override fun apply() {
         val credentials = credentialInput
-        ZephyrSettings.instance.storyPrefix = storyPrefixInput
-        ZephyrSettings.instance.jiraApiBaseUrl = jiraApiBaseUrlInput
+        ZephyrTranspilerSettings.instance.storyPrefix = storyPrefixInput
+        ZephyrTranspilerSettings.instance.jiraApiBaseUrl = jiraApiBaseUrlInput
         PasswordSafe.instance.set(createCredentialAttributes(KEY_JIRA_CREDENTIALS), credentials)
     }
 

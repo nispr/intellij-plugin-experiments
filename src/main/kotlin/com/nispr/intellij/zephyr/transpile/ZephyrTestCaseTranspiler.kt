@@ -1,4 +1,4 @@
-package com.ezkhimo.intellij.zephyr.transpile
+package com.nispr.intellij.zephyr.transpile
 
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.command.WriteCommandAction
@@ -12,11 +12,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import org.jetbrains.rpc.LOG
-import com.ezkhimo.intellij.zephyr.api.FetchTestCaseUseCase
-import com.ezkhimo.intellij.zephyr.api.TestCase
+import com.nispr.intellij.zephyr.api.FetchTestCaseUseCase
+import com.nispr.intellij.zephyr.api.TestCase
 
 interface ZephyrTestCaseTranspiler {
-  fun transpileIntoEditor(project: Project, editor: Editor, file: PsiFile, storyId: String)
+  fun transpileIntoEditor(project: Project, editor: Editor, file: PsiFile, issueId: String)
 }
 
 class ZephyrTestCaseTranspilerImpl(
@@ -26,12 +26,12 @@ class ZephyrTestCaseTranspilerImpl(
 
     private val coroutineContext = Dispatchers.IO + SupervisorJob()
 
-    override fun transpileIntoEditor(project: Project, editor: Editor, file: PsiFile, storyId: String) {
-        fetchTestCaseAndTranspile(project, editor, file, storyId)
+    override fun transpileIntoEditor(project: Project, editor: Editor, file: PsiFile, issueId: String) {
+        fetchTestCaseAndTranspile(project, editor, file, issueId)
     }
 
-    private fun fetchTestCaseAndTranspile(project: Project, editor: Editor, file: PsiFile, storyId: String) {
-        fetchTestCase(storyId = storyId) { testCase ->
+    private fun fetchTestCaseAndTranspile(project: Project, editor: Editor, file: PsiFile, issueId: String) {
+        fetchTestCase(issueId = issueId) { testCase ->
             ApplicationManager.getApplication().invokeLater {
                 WriteCommandAction.writeCommandAction(project).run<Throwable> {
                     insertTestCaseIntoFile(testCase, editor, file)
@@ -51,10 +51,10 @@ class ZephyrTestCaseTranspilerImpl(
         CodeStyleManager.getInstance(file.project).reformat(file)
     }
 
-    private fun fetchTestCase(storyId: String, callback: (TestCase) -> Unit) {
+    private fun fetchTestCase(issueId: String, callback: (TestCase) -> Unit) {
         CoroutineScope(coroutineContext).launch {
             try {
-                val testCase = fetchTestCaseUseCase.fetchTestCase(storyId)
+                val testCase = fetchTestCaseUseCase.fetchTestCase(issueId)
                 ApplicationManager.getApplication().invokeLater { callback(testCase) }
             } catch (e: Exception) {
                 LOG.error("Failed to fetch test case", e)

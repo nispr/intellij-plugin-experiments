@@ -1,4 +1,4 @@
-package com.ezkhimo.intellij.zephyr.api.model
+package com.nispr.intellij.zephyr.api.model
 
 data class ZephyrTestCase(
     var id: Int,

@@ -1,8 +1,8 @@
-package com.ezkhimo.intellij.zephyr.transpile
+package com.nispr.intellij.zephyr.transpile
 
 import com.squareup.kotlinpoet.FunSpec
 import org.junit.Test
-import com.ezkhimo.intellij.zephyr.api.TestCase
+import com.nispr.intellij.zephyr.api.TestCase
 
 interface TestCaseCodeGenerator {
     fun generateTestCode(testCase: TestCase): String

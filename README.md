@@ -1,6 +1,6 @@
 # Intellij Plugin Experiments
 
-This is a very simple Intellij plugin demonstrating some basic .
+This is a very simple Intellij plugin trying out some basic features of the Intellij Plugin SDK.
 
 ### Functional features
 - Transpiling test cases fetched from a specified JIRA/Zephyr API to Kotlin code.

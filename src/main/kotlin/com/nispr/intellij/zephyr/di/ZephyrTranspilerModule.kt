@@ -1,17 +1,17 @@
-package com.ezkhimo.intellij.zephyr.di
+package com.nispr.intellij.zephyr.di
 
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import com.ezkhimo.intellij.zephyr.api.FetchTestCaseUseCase
-import com.ezkhimo.intellij.zephyr.api.model.ZephyrApi
-import com.ezkhimo.intellij.zephyr.api.model.ZephyrTestCase
-import com.ezkhimo.intellij.zephyr.api.model.ZephyrTestStep
-import com.ezkhimo.intellij.zephyr.settings.ZephyrSettings
-import com.ezkhimo.intellij.zephyr.transpile.TestCaseCodeGenerator
-import com.ezkhimo.intellij.zephyr.transpile.TestCaseCodeGeneratorImpl
-import com.ezkhimo.intellij.zephyr.transpile.ZephyrTestCaseTranspiler
-import com.ezkhimo.intellij.zephyr.transpile.ZephyrTestCaseTranspilerImpl
+import com.nispr.intellij.zephyr.api.FetchTestCaseUseCase
+import com.nispr.intellij.zephyr.api.model.ZephyrApi
+import com.nispr.intellij.zephyr.api.model.ZephyrTestCase
+import com.nispr.intellij.zephyr.api.model.ZephyrTestStep
+import com.nispr.intellij.zephyr.settings.ZephyrTranspilerSettings
+import com.nispr.intellij.zephyr.transpile.TestCaseCodeGenerator
+import com.nispr.intellij.zephyr.transpile.TestCaseCodeGeneratorImpl
+import com.nispr.intellij.zephyr.transpile.ZephyrTestCaseTranspiler
+import com.nispr.intellij.zephyr.transpile.ZephyrTestCaseTranspilerImpl
 import okhttp3.OkHttpClient
 
 val ZephyrModule = module {
@@ -40,7 +40,7 @@ val ApiModule = module {
     single<ZephyrApi> {
         Retrofit
             .Builder()
-            .baseUrl(ZephyrSettings.instance.jiraApiBaseUrl)
+            .baseUrl(ZephyrTranspilerSettings.instance.jiraApiBaseUrl)
             .client(OkHttpClient.Builder().build())
             .addConverterFactory(GsonConverterFactory.create())
             .build()

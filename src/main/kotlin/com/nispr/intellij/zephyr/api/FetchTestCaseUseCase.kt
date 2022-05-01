@@ -1,7 +1,7 @@
-package com.ezkhimo.intellij.zephyr.api
+package com.nispr.intellij.zephyr.api
 
-import com.ezkhimo.intellij.zephyr.api.model.ZephyrApi
-import com.ezkhimo.intellij.zephyr.api.model.ZephyrTestCase
+import com.nispr.intellij.zephyr.api.model.ZephyrApi
+import com.nispr.intellij.zephyr.api.model.ZephyrTestCase
 
 // TODO Once API is known, add real mapping
 class FetchTestCaseUseCase(private val api: ZephyrApi) {
@@ -11,7 +11,7 @@ class FetchTestCaseUseCase(private val api: ZephyrApi) {
 
     private fun mapToTestCase(zephyrTestCase: ZephyrTestCase): TestCase {
         return TestCase(
-            storyId = "ABC-12345",
+            issueId = "ABC-12345",
             steps = listOf(
                 TestStep(
                     id = 1,
