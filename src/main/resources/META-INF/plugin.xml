@@ -23,11 +23,6 @@
     </extensions>
 
     <actions>
-        <action id="com.ezkhimo.NewZephyrTestCaseAction"
-                class="com.ezkhimo.intellij.zephyr.action.NewZephyrTestCaseAction" text="Zephyr Test Case"
-                description="Add Zephyr test case">
-            <add-to-group group-id="NewGroup" anchor="after" relative-to-action="NewFile"/>
-        </action>
         <action id="com.ezkhimo.intellij.zephyr.action.GenerateZephyrTranspilationAction"
                 class="com.ezkhimo.intellij.zephyr.action.GenerateZephyrTranspilationAction" text="Zephyr Test"
                 description="Import zephyr test code">
