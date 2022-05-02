@@ -1,27 +1,35 @@
 package com.nispr.intellij.zephyr.api
 
-import com.nispr.intellij.zephyr.api.model.ZephyrApi
-import com.nispr.intellij.zephyr.api.model.ZephyrTestCase
+import com.nispr.intellij.zephyr.api.model.*
+import com.nispr.intellij.zephyr.settings.ZephyrTranspilerSettings
 
-// TODO Once API is known, add real mapping
-class FetchTestCaseUseCase(private val api: ZephyrApi) {
-    suspend fun fetchTestCase(testCaseId: String): TestCase {
-        return mapToTestCase(api.getTestCase(testCaseId))
+class FetchTestCaseUseCase(
+    private val zephyrApi: ZephyrApi,
+    private val jiraApi: JiraApi
+) {
+
+    suspend fun fetchTestCase(issueKey: String): TestCase {
+        checkPreconditions()
+        val jiraIssue = jiraApi.getIssue(issueKey)
+        val zephyrTestCase = zephyrApi.getTestCase(jiraIssue.id)
+        return mapToTestCase(jiraIssue, zephyrTestCase)
     }
 
-    private fun mapToTestCase(zephyrTestCase: ZephyrTestCase): TestCase {
-        return TestCase(
-            issueId = "ABC-12345",
-            steps = listOf(
-                TestStep(
-                    id = 1,
-                    action = "Mach dies"
-                ),
-                TestStep(
-                    id = 2,
-                    action = "Mach das"
-                ),
-            )
+    private fun mapToTestCase(jiraIssue: JiraIssue, zephyrTestCase: ZephyrTestCase): TestCase {
+        fun mapStep(step: ZephyrTestStep) = TestStep(
+            step.orderId,
+            step.step,
         )
+
+        return TestCase(
+            issueId = jiraIssue.id,
+            steps = zephyrTestCase.testSteps.map(::mapStep)
+        )
+    }
+
+    private fun checkPreconditions() {
+        if (ZephyrTranspilerSettings.instance.jiraApiBaseUrl.isNullOrBlank()) {
+            throw Exception("JIRA API base URL is not set. Please set it in Zephyr Transpiler settings.")
+        }
     }
 }

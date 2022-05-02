@@ -1,11 +1,14 @@
 package com.nispr.intellij.zephyr.api.model
 
+import com.google.gson.annotations.SerializedName
+
 data class ZephyrTestCase(
-    var id: Int,
-    var testSteps: Array<ZephyrTestStep>? = null,
+    @SerializedName("stepBeanCollection")
+    var testSteps: Array<ZephyrTestStep>,
 )
 
 data class ZephyrTestStep(
-    var id: Int ? = null,
-    var action: String? = null
+    var id: Int,
+    var orderId: Int,
+    var step: String
 )

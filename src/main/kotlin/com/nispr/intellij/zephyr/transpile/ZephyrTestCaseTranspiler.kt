@@ -1,5 +1,7 @@
 package com.nispr.intellij.zephyr.transpile
 
+import com.intellij.execution.ExecutionException
+import com.intellij.execution.util.ExecutionErrorDialog
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.editor.Editor
@@ -7,13 +9,13 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiFile
 import com.intellij.psi.codeStyle.CodeStyleManager
+import com.nispr.intellij.zephyr.api.FetchTestCaseUseCase
+import com.nispr.intellij.zephyr.api.TestCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import org.jetbrains.rpc.LOG
-import com.nispr.intellij.zephyr.api.FetchTestCaseUseCase
-import com.nispr.intellij.zephyr.api.TestCase
 
 interface ZephyrTestCaseTranspiler {
   fun transpileIntoEditor(project: Project, editor: Editor, file: PsiFile, issueId: String)
@@ -31,7 +33,7 @@ class ZephyrTestCaseTranspilerImpl(
     }
 
     private fun fetchTestCaseAndTranspile(project: Project, editor: Editor, file: PsiFile, issueId: String) {
-        fetchTestCase(issueId = issueId) { testCase ->
+        fetchTestCase(project, issueId = issueId) { testCase ->
             ApplicationManager.getApplication().invokeLater {
                 WriteCommandAction.writeCommandAction(project).run<Throwable> {
                     insertTestCaseIntoFile(testCase, editor, file)
@@ -51,12 +53,13 @@ class ZephyrTestCaseTranspilerImpl(
         CodeStyleManager.getInstance(file.project).reformat(file)
     }
 
-    private fun fetchTestCase(issueId: String, callback: (TestCase) -> Unit) {
+    private fun fetchTestCase(project: Project, issueId: String, callback: (TestCase) -> Unit) {
         CoroutineScope(coroutineContext).launch {
             try {
                 val testCase = fetchTestCaseUseCase.fetchTestCase(issueId)
                 ApplicationManager.getApplication().invokeLater { callback(testCase) }
             } catch (e: Exception) {
+                ExecutionErrorDialog.show(ExecutionException(e), "Test Case - Fetch Error", project)
                 LOG.error("Failed to fetch test case", e)
             }
         }

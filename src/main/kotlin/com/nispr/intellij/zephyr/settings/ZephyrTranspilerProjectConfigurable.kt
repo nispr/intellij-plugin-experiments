@@ -1,23 +1,26 @@
 package com.nispr.intellij.zephyr.settings
 
+import com.intellij.credentialStore.Credentials
+import com.intellij.openapi.options.Configurable
 import com.nispr.intellij.zephyr.resources.getString
 import com.nispr.intellij.zephyr.settings.ui.ZephyrSettingsComponent
-import com.intellij.credentialStore.CredentialAttributes
-import com.intellij.credentialStore.Credentials
-import com.intellij.credentialStore.generateServiceName
-import com.intellij.ide.passwordSafe.PasswordSafe
-import com.intellij.openapi.options.Configurable
+import org.koin.java.KoinJavaComponent.inject
 
 
 class ZephyrTranspilerProjectConfigurable : Configurable {
+
+    private val credentialRepository: CredentialRepository by inject(CredentialRepository::class.java)
 
     private var settingsComponent: ZephyrSettingsComponent? = null
 
     private val settings: ZephyrTranspilerSettings
         get() = ZephyrTranspilerSettings.instance
 
-    private val credentialInput
-        get() = settingsComponent?.let { Credentials(it.userName, it.getPassword()) }
+    private val userNameInput: String?
+        get() = settingsComponent?.let { it.userName }
+
+    private val passwordInput: String?
+        get() = settingsComponent?.let { it.getPassword().toString() }
 
     private val storyPrefixInput
         get() = settingsComponent?.let { it.storyPrefix }
@@ -30,26 +33,20 @@ class ZephyrTranspilerProjectConfigurable : Configurable {
     override fun createComponent() = ZephyrSettingsComponent().also { settingsComponent = it }.panel
 
     override fun isModified(): Boolean {
-        val currentCredentials = PasswordSafe.instance.get(createCredentialAttributes(KEY_JIRA_CREDENTIALS))
-        return credentialInput != currentCredentials
+        return Credentials(userNameInput, passwordInput) != credentialRepository.get()
                 || jiraApiBaseUrlInput != settings.jiraApiBaseUrl
                 || storyPrefixInput != settings.storyPrefix
     }
 
     override fun apply() {
-        val credentials = credentialInput
         ZephyrTranspilerSettings.instance.storyPrefix = storyPrefixInput
         ZephyrTranspilerSettings.instance.jiraApiBaseUrl = jiraApiBaseUrlInput
-        PasswordSafe.instance.set(createCredentialAttributes(KEY_JIRA_CREDENTIALS), credentials)
-    }
 
-    private fun createCredentialAttributes(key: String) = CredentialAttributes(
-        generateServiceName("Zephyr", key)
-    )
+    }
 
     override fun reset() {
         super.reset()
-        val currentCredentials = PasswordSafe.instance.get(createCredentialAttributes(KEY_JIRA_CREDENTIALS))
+        val currentCredentials = credentialRepository.get()
         settingsComponent?.userName = currentCredentials?.userName ?: ""
         settingsComponent?.storyPrefix = settings.storyPrefix ?: ""
         settingsComponent?.jiraApiBaseUrlInput = settings.jiraApiBaseUrl ?: ""
@@ -64,8 +61,5 @@ class ZephyrTranspilerProjectConfigurable : Configurable {
         settingsComponent = null
     }
 
-    companion object {
-        private const val KEY_JIRA_CREDENTIALS = "JIRA_CREDENTIALS"
-    }
 }
 
